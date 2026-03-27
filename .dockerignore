@@ -1,0 +1,13 @@
+.git
+.gitignore
+.DS_Store
+
+docs
+
+**/node_modules
+**/dist
+
+server/.env
+client/.env
+
+client/public/generated/*

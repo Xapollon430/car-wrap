@@ -1,80 +1,133 @@
-# Car Wrap Visualizer
+# Car Wrap Visualizer Monorepo
 
-Simple React + TypeScript frontend for selecting:
-- 1 car image (from 10 options)
-- 1 wrap image/color (from 10 options)
+This repository now has:
+- `client/` - React + TypeScript UI
+- `client/public/` - static UI assets for landing/gallery
+- `server/` - TypeScript API for Gemini image generation
+- `shared/` - kept in repo but not used for runtime catalog anymore
 
-Then clicking **Generate** to call a mocked client that returns a placeholder generated result image.
+## Generation Flow
 
-No backend/server is used in this version.
+1. UI sends `POST /api/generate` with `carName` and `wrapName`
+2. Server resolves names via catalog JSON stored in Firebase Storage
+3. Server loads car/wrap source images from Firebase Storage
+4. Server checks Firebase Storage for existing combo cache:
+   - `generated/<car-slug>__<wrap-slug>.<ext>`
+5. If found, server returns cached image URL (`/generated/...`)
+6. If not found, server calls Gemini, uploads result to Firebase Storage, then returns URL
 
-## Tech
+## Catalog Upload Flow
 
-- React + TypeScript
-- Vite
-- Vitest + Testing Library
+- `GET /api/catalog` returns cars/wraps from Firebase Storage
+- `POST /api/catalog/cars/upload-url` with JSON:
+  - `name`
+  - `fileName`
+  - `contentType`
+- Browser uploads file directly to Firebase Storage using returned signed URL
+- `POST /api/catalog/cars/commit` with JSON:
+  - `name`
+  - `fileName`
+  - `mimeType`
+- Same flow for wraps:
+  - `/api/catalog/wraps/upload-url`
+  - `/api/catalog/wraps/commit`
+- Uploaded files are stored in Firebase Storage under:
+  - `cars/<slug>.<ext>`
+  - `wraps/<slug>.<ext>`
+- Catalog metadata is stored in bucket JSON files:
+  - `catalog/cars.json`
+  - `catalog/wraps.json`
 
-## Run
+## Required Environment
+
+Copy and edit:
 
 ```bash
+cp server/.env.example server/.env
+```
+
+Set:
+- `GEMINI_API_KEY` to your real key
+- `FIREBASE_STORAGE_BUCKET` to your Firebase Storage bucket name
+- optional `GEMINI_MODEL` (default `gemini-2.5-flash-image`)
+- optional `PORT` (default `8080`)
+- optional `CLIENT_DIST_DIR` (default `../client/dist`)
+
+For local development, also authenticate Google Cloud credentials so the server can read/write Firebase Storage:
+
+```bash
+gcloud auth application-default login
+```
+
+For direct browser uploads to signed URLs, configure CORS on the bucket for your app origins.
+Also ensure the server identity that creates signed URLs has `iam.serviceAccounts.signBlob`
+permission (for example via `roles/iam.serviceAccountTokenCreator`).
+
+## Run Server
+
+```bash
+cd server
 npm install
 npm run dev
 ```
 
-## Test
+## Run Client
 
 ```bash
-npm run test -- --run
+cd client
+npm install
+npm run dev
 ```
 
-## Build
+Client dev server proxies:
+- `/api/*` -> `http://localhost:8080`
+- `/generated/*` -> `http://localhost:8080`
+- `/catalog-media/*` -> `http://localhost:8080`
+
+## Docker (Single Container)
+
+This repo includes a root `Dockerfile` that:
+- builds the React app (`client/dist`)
+- runs the TypeScript API server
+- serves both UI and API from one Cloud Run service
+
+Build and run locally:
 
 ```bash
-npm run build
+docker build -t car-wrap .
+docker run --rm -p 8080:8080 \
+  -e GEMINI_API_KEY=your_key \
+  -e FIREBASE_STORAGE_BUCKET=your_bucket_name \
+  car-wrap
 ```
 
-## Asset Folders
+## Deploy to Cloud Run
 
-- `public/cars`
-- `public/wraps`
-- `public/generated`
+1. Build and push container:
 
-The project currently includes placeholder files so the UI renders immediately.
-Replace them with your real images using the same filenames.
+```bash
+gcloud builds submit --tag gcr.io/$PROJECT_ID/car-wrap:latest
+```
 
-### Expected Car Files
+2. Store Gemini key in Secret Manager:
 
-- `toyota-camry.jpg`
-- `honda-civic.jpg`
-- `tesla-model-3.jpg`
-- `ford-f150.jpg`
-- `chevy-silverado.avif`
-- `bmw-m3.jpg`
-- `jeep-wrangler.jpeg`
-- `toyota-rav4.jpg`
-- `ford-mustang.jpg`
-- `tesla-model-y.jpg`
+```bash
+echo -n "YOUR_GEMINI_KEY" | gcloud secrets create GEMINI_API_KEY --data-file=-
+# If secret already exists:
+# echo -n "YOUR_GEMINI_KEY" | gcloud secrets versions add GEMINI_API_KEY --data-file=-
+```
 
-### Expected Wrap Files
+3. Deploy:
 
-- `diamond-blue-red-shift.jpg`
-- `diamond-northern-lights.jpg`
-- `iridescent-black.jpg`
-- `metallic-isle-of-man-green.jpg`
-- `metallic-gold-green-shift.jpg`
-- `nebula-red-purple.jpg`
-- `midnight-violet.jpg`
-- `iridescent-silver.jpg`
-- `metallic-orange-red.jpg`
-- `tropical-chrome.jpg`
+```bash
+gcloud run deploy car-wrap \
+  --image gcr.io/$PROJECT_ID/car-wrap:latest \
+  --region us-central1 \
+  --platform managed \
+  --allow-unauthenticated \
+  --set-env-vars FIREBASE_STORAGE_BUCKET=your_bucket_name,GEMINI_MODEL=gemini-2.5-flash-image,CLIENT_DIST_DIR=./client/dist \
+  --set-secrets GEMINI_API_KEY=GEMINI_API_KEY:latest
+```
 
-### Expected Generated Placeholder
-
-- `public/generated/mock-result.jpg`
-
-## Mock API Behavior
-
-`src/api/generateMock.ts` simulates async generation:
-- waits ~800ms
-- returns `/generated/mock-result.jpg` and a prompt string
-- can throw an error when `forceError: true`
+4. Grant bucket access to your Cloud Run service account:
+- `roles/storage.objectAdmin` on the Firebase Storage bucket (read/write generated images)

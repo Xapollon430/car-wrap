@@ -1,0 +1,26 @@
+{
+  "cars": [
+    { "id": "toyota-camry", "label": "Toyota Camry", "imagePath": "/cars/toyota-camry.jpg" },
+    { "id": "honda-civic", "label": "Honda Civic", "imagePath": "/cars/honda-civic.jpg" },
+    { "id": "tesla-model-3", "label": "Tesla Model 3", "imagePath": "/cars/tesla-model-3.jpg" },
+    { "id": "ford-f150", "label": "Ford F-150", "imagePath": "/cars/ford-f150.jpg" },
+    { "id": "chevy-silverado", "label": "Chevy Silverado", "imagePath": "/cars/chevy-silverado.avif" },
+    { "id": "bmw-m3", "label": "BMW M3", "imagePath": "/cars/bmw-m3.jpg" },
+    { "id": "jeep-wrangler", "label": "Jeep Wrangler", "imagePath": "/cars/jeep-wrangler.jpeg" },
+    { "id": "toyota-rav4", "label": "Toyota RAV4", "imagePath": "/cars/toyota-rav4.jpg" },
+    { "id": "ford-mustang", "label": "Ford Mustang GT", "imagePath": "/cars/ford-mustang.jpg" },
+    { "id": "tesla-model-y", "label": "Tesla Model Y", "imagePath": "/cars/tesla-model-y.jpg" }
+  ],
+  "wraps": [
+    { "id": "diamond-blue-red", "label": "Diamond Blue Red", "imagePath": "/wraps/diamond-blue-red-shift.jpg" },
+    { "id": "northern-lights", "label": "Northern Lights", "imagePath": "/wraps/diamond-northern-lights.jpg" },
+    { "id": "iridescent-black", "label": "Iridescent Black", "imagePath": "/wraps/iridescent-black.jpg" },
+    { "id": "isle-of-man-green", "label": "Isle of Man Green", "imagePath": "/wraps/metallic-isle-of-man-green.jpg" },
+    { "id": "gold-green-shift", "label": "Gold Green Shift", "imagePath": "/wraps/metallic-gold-green-shift.jpg" },
+    { "id": "nebula-red-purple", "label": "Nebula Red Purple", "imagePath": "/wraps/nebula-red-purple.jpg" },
+    { "id": "midnight-violet", "label": "Midnight Violet", "imagePath": "/wraps/midnight-violet.jpg" },
+    { "id": "iridescent-silver", "label": "Iridescent Silver", "imagePath": "/wraps/iridescent-silver.jpg" },
+    { "id": "metallic-orange-red", "label": "Metallic Orange Red", "imagePath": "/wraps/metallic-orange-red.jpg" },
+    { "id": "tropical-chrome", "label": "Tropical Chrome", "imagePath": "/wraps/tropical-chrome.jpg" }
+  ]
+}
