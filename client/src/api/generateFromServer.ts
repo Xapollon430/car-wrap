@@ -5,7 +5,6 @@ export type GenerateInput = {
 
 export type GenerateResult = {
   imageUrl: string
-  prompt: string
 }
 
 type ErrorResponse = {
@@ -24,17 +23,28 @@ export async function generateFromServer(
   })
 
   if (!response.ok) {
-    let message = 'Could not generate image'
-    try {
-      const errorBody = (await response.json()) as ErrorResponse
-      if (errorBody.error) {
-        message = errorBody.error
-      }
-    } catch {
-      // Ignore parse failures and fall back to generic message.
-    }
-    throw new Error(message)
+    throw new Error(await readErrorMessage(response, 'Could not generate image'))
   }
 
-  return (await response.json()) as GenerateResult
+  return readJson<GenerateResult>(response)
+}
+
+async function readErrorMessage(
+  response: Response,
+  fallback: string,
+): Promise<string> {
+  try {
+    const errorBody = await readJson<ErrorResponse>(response)
+    if (errorBody.error) {
+      return errorBody.error
+    }
+  } catch {
+    // Ignore parse failures and use fallback.
+  }
+
+  return fallback
+}
+
+async function readJson<T>(response: Response): Promise<T> {
+  return (await response.json()) as T
 }

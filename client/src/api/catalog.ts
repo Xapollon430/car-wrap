@@ -23,11 +23,12 @@ type ErrorResponse = {
 
 export async function fetchCatalog(): Promise<CatalogResponse> {
   const response = await fetch('/api/catalog')
+
   if (!response.ok) {
     throw new Error(await readErrorMessage(response, 'Could not load catalog'))
   }
 
-  return (await response.json()) as CatalogResponse
+  return readJson<CatalogResponse>(response)
 }
 
 export async function uploadCatalogItem(input: {
@@ -53,7 +54,7 @@ export async function uploadCatalogItem(input: {
     )
   }
 
-  const uploadTarget = (await createResponse.json()) as UploadUrlResponse
+  const uploadTarget = await readJson<UploadUrlResponse>(createResponse)
   if (!uploadTarget.uploadUrl || !uploadTarget.fileName || !uploadTarget.mimeType) {
     throw new Error('Upload target response is incomplete')
   }
@@ -85,7 +86,7 @@ export async function uploadCatalogItem(input: {
     throw new Error(await readErrorMessage(commitResponse, 'Could not save catalog'))
   }
 
-  const payload = (await commitResponse.json()) as UploadResponse
+  const payload = await readJson<UploadResponse>(commitResponse)
   if (!payload.item) {
     throw new Error('Upload succeeded but no catalog item was returned')
   }
@@ -114,7 +115,7 @@ async function readErrorMessage(
   fallback: string,
 ): Promise<string> {
   try {
-    const errorBody = (await response.json()) as ErrorResponse
+    const errorBody = await readJson<ErrorResponse>(response)
     if (errorBody.error) {
       return errorBody.error
     }
@@ -123,4 +124,8 @@ async function readErrorMessage(
   }
 
   return fallback
+}
+
+async function readJson<T>(response: Response): Promise<T> {
+  return (await response.json()) as T
 }

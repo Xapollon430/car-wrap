@@ -33,7 +33,6 @@ function ImageModal({ isOpen, imageUrl, onClose }: ImageModalProps) {
   return (
     <div
       className="fixed inset-0 z-50 grid place-items-center bg-black/85 px-4 py-5 backdrop-blur-sm"
-      data-testid="image-modal-backdrop"
       onClick={onClose}
     >
       <div
