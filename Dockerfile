@@ -15,7 +15,6 @@ COPY server/package*.json ./server/
 RUN npm --prefix server ci --include=dev
 
 COPY server/ ./server/
-COPY shared/ ./shared/
 COPY --from=client-builder /app/client/dist ./client/dist
 ENV NODE_ENV=production
 
