@@ -1,13 +1,13 @@
-import type { CatalogItem } from '../../../types/catalog'
+import type { CatalogItem } from "../../../types/catalog";
 
 type SelectorGridProps = {
-  items: CatalogItem[]
-  selectedId: string | null
-  onSelect: (id: string) => void
-  deletingId: string | null
-  onDelete: (item: CatalogItem) => void
-  selectionLabelPrefix: string
-}
+  items: CatalogItem[];
+  selectedId: string | null;
+  onSelect: (id: string) => void;
+  deletingId: string | null;
+  onDelete: (item: CatalogItem) => void;
+  selectionLabelPrefix: string;
+};
 
 function SelectorGrid({
   items,
@@ -20,31 +20,31 @@ function SelectorGrid({
   return (
     <ul className="grid grid-cols-2 gap-2.5">
       {items.map((item) => {
-        const isSelected = selectedId === item.id
-        const isDeleting = deletingId === item.id
+        const isSelected = selectedId === item.id;
+        const isDeleting = deletingId === item.id;
 
         return (
           <li key={item.id}>
             <div
               className={`relative rounded-xl border p-1.5 transition ${
                 isSelected
-                  ? 'border-[#ff7a18] bg-[#ff7a18]/10'
-                  : 'border-white/15 bg-black/35 hover:border-white/30'
+                  ? "border-[#ff7a18] bg-[#ff7a18]/10"
+                  : "border-white/15 bg-black/35 hover:border-white/30"
               }`}
             >
               <button
                 type="button"
                 onClick={(event) => {
-                  event.preventDefault()
-                  event.stopPropagation()
-                  onDelete(item)
+                  event.preventDefault();
+                  event.stopPropagation();
+                  onDelete(item);
                 }}
                 disabled={isDeleting}
                 aria-label={`Delete ${item.label}`}
                 title={`Delete ${item.label}`}
                 className="absolute right-3 top-3 z-10 grid h-7 w-7 place-items-center rounded-full border border-red-300/50 bg-black/65 text-xs font-bold text-red-200 transition hover:border-red-200/80 hover:text-red-100 disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {isDeleting ? '…' : '✕'}
+                {isDeleting ? "…" : "✕"}
               </button>
 
               <button
@@ -66,10 +66,10 @@ function SelectorGrid({
               </button>
             </div>
           </li>
-        )
+        );
       })}
     </ul>
-  )
+  );
 }
 
-export default SelectorGrid
+export default SelectorGrid;

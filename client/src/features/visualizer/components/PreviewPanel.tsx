@@ -1,4 +1,6 @@
+import { useState } from 'react'
 import NoticeText from './NoticeText'
+import SaveLeadModal from './SaveLeadModal'
 
 type PreviewPanelProps = {
   selectedCarLabel: string | null
@@ -25,11 +27,14 @@ function PreviewPanel({
   onGenerate,
   onOpenPreview,
 }: PreviewPanelProps) {
+  const [isSaveModalOpen, setIsSaveModalOpen] = useState(false)
+
   return (
-    <section
-      className="glass-surface rounded-2xl p-4 md:p-5"
-      aria-label="result preview"
-    >
+    <>
+      <section
+        className="glass-surface rounded-2xl p-4 md:p-5"
+        aria-label="result preview"
+      >
       <h2 className="text-lg font-semibold text-white">Preview</h2>
       <div className="mt-3 space-y-2 text-sm">
         <p className="text-neutral-300">
@@ -92,9 +97,28 @@ function PreviewPanel({
           <figcaption className="mt-2 text-xs text-neutral-400">
             Click image for fullscreen.
           </figcaption>
+          <button
+            type="button"
+            onClick={() => {
+              setIsSaveModalOpen(true)
+            }}
+            className="mt-3 w-full rounded-xl border border-white/20 px-4 py-2.5 text-xs font-bold uppercase tracking-[0.14em] text-white transition hover:border-white/40 hover:bg-white/5"
+          >
+            Save this image
+          </button>
         </figure>
       ) : null}
-    </section>
+      </section>
+
+      <SaveLeadModal
+        isOpen={isSaveModalOpen}
+        generatedImageUrl={generatedImageUrl}
+        onClose={() => setIsSaveModalOpen(false)}
+        onSuccess={() => {
+          setIsSaveModalOpen(false)
+        }}
+      />
+    </>
   )
 }
 

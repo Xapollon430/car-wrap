@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { notFound } from "../../lib/errors.js";
+import { badRequest, notFound } from "../../lib/errors.js";
 import { asyncRoute, sendStreamFile } from "../../lib/http.js";
 import type { GeneratedImageRepository } from "./generation.repository.js";
 import type { GenerationService } from "./generation.service.js";
@@ -19,6 +19,38 @@ export function createGenerationRouter(deps: {
     asyncRoute(async (req, res) => {
       const input = parseGenerateInput(req.body);
       res.json(await deps.service.generate(input));
+    }),
+  );
+
+  router.post(
+    "/api/leads/save-image",
+    asyncRoute(async (req, res) => {
+      const body =
+        req.body && typeof req.body === "object"
+          ? (req.body as Record<string, unknown>)
+          : {};
+      const name = typeof body.name === "string" ? body.name.trim() : "";
+      const email = typeof body.email === "string" ? body.email.trim() : "";
+      const phone = typeof body.phone === "string" ? body.phone.trim() : "";
+      const imageIdentifier =
+        typeof body.imageIdentifier === "string"
+          ? body.imageIdentifier.trim()
+          : "";
+      const imageUrl = typeof body.imageUrl === "string" ? body.imageUrl.trim() : "";
+
+      if (!name || !email || !phone || !imageIdentifier || !imageUrl) {
+        throw badRequest(
+          "name, email, phone, imageIdentifier, and imageUrl are required",
+        );
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        throw badRequest("email must be valid");
+      }
+
+      console.log(
+        `[lead] name="${name}" email="${email}" phone="${phone}" imageIdentifier="${imageIdentifier}" imageUrl="${imageUrl}"`,
+      );
+      res.status(202).json({ ok: true });
     }),
   );
 
