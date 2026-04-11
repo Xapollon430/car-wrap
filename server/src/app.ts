@@ -9,6 +9,7 @@ import type { CatalogService } from "./modules/catalog/catalog.service.js";
 import { createGenerationRouter } from "./modules/generation/generation.routes.js";
 import type { GeneratedImageRepository } from "./modules/generation/generation.repository.js";
 import type { GenerationService } from "./modules/generation/generation.service.js";
+import type { LeadsService } from "./modules/leads/leads.service.js";
 import { createShopsRouter } from "./modules/shops/shops.routes.js";
 import type { ShopsService } from "./modules/shops/shops.service.js";
 
@@ -18,6 +19,7 @@ export async function createApp(input: {
   catalogService: CatalogService;
   generatedImageRepository: GeneratedImageRepository;
   generationService: GenerationService;
+  leadsService: LeadsService;
   shopsService: ShopsService;
 }) {
   const app = express();
@@ -41,6 +43,8 @@ export async function createApp(input: {
     createGenerationRouter({
       service: input.generationService,
       repository: input.generatedImageRepository,
+      leadsService: input.leadsService,
+      shopsService: input.shopsService,
     }),
   );
 

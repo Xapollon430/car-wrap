@@ -94,7 +94,7 @@ function VisualizerPage() {
         <div className="grid gap-6 xl:grid-cols-[1.1fr_1.1fr_0.9fr]">
           <SelectorPanel {...carPanel} />
           <SelectorPanel {...wrapPanel} />
-          <PreviewPanel {...previewPanel} />
+          <PreviewPanel {...previewPanel} slug={slug} />
         </div>
       </main>
 

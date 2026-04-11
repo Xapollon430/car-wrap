@@ -1,12 +1,15 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import BaseModal from '../../../components/BaseModal'
 type SaveLeadModalProps = {
   isOpen: boolean
+  slug: string
   generatedImageUrl: string | null
   onClose: () => void
   onSuccess: () => void
 }
 function SaveLeadModal({
   isOpen,
+  slug,
   generatedImageUrl,
   onClose,
   onSuccess,
@@ -16,6 +19,21 @@ function SaveLeadModal({
   const [phone, setPhone] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+
+  function resetFormState(): void {
+    setName('')
+    setEmail('')
+    setPhone('')
+    setErrorMessage(null)
+    setIsSubmitting(false)
+  }
+
+  useEffect(() => {
+    if (!isOpen) {
+      resetFormState()
+    }
+  }, [isOpen])
+
   if (!isOpen) {
     return null
   }
@@ -55,6 +73,7 @@ function SaveLeadModal({
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          slug,
           name: nextName,
           email: nextEmail,
           phone: nextPhone,
@@ -67,9 +86,7 @@ function SaveLeadModal({
         throw new Error('Could not submit request')
       }
 
-      setName('')
-      setEmail('')
-      setPhone('')
+      resetFormState()
       onSuccess()
     } catch (error) {
       setErrorMessage(
@@ -83,27 +100,24 @@ function SaveLeadModal({
   }
 
   return (
-    <div
-      className="fixed inset-0 z-40 grid place-items-center bg-black/80 px-4 py-5 backdrop-blur-sm"
-      onClick={() => {
-        if (!isSubmitting) {
-          setErrorMessage(null)
-          onClose()
-        }
+    <BaseModal
+      isOpen={isOpen}
+      onClose={() => {
+        resetFormState()
+        onClose()
       }}
+      closeDisabled={isSubmitting}
+      ariaLabel="Save this image"
+      contentClassName="glass-surface rounded-2xl p-5 md:p-6"
     >
       <form
-        className="glass-surface w-full max-w-lg rounded-2xl p-5 md:p-6"
-        role="dialog"
-        aria-modal="true"
-        aria-label="Save this image"
-        onClick={(event) => event.stopPropagation()}
+        className="mt-1"
         onSubmit={(event) => {
           event.preventDefault()
           void handleSubmit()
         }}
       >
-        <h3 className="display-font text-3xl text-white">Save This Image</h3>
+        <h3 className="display-font pr-12 text-3xl text-white">Save This Image</h3>
 
         <div className="mt-5 grid gap-3">
           <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name" autoComplete="name" className="w-full rounded-xl border border-white/20 bg-black/40 px-3 py-2.5 text-sm text-white placeholder:text-neutral-500 outline-none transition focus:border-[#ff7a18]" />
@@ -114,14 +128,14 @@ function SaveLeadModal({
 
           <div className="mt-1 flex items-center justify-end gap-2">
             <button type="button" onClick={() => {
-              setErrorMessage(null)
+              resetFormState()
               onClose()
             }} disabled={isSubmitting} className="rounded-full border border-white/20 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-neutral-200 transition hover:border-white/35 hover:text-white disabled:cursor-not-allowed disabled:opacity-60">Cancel</button>
             <button type="submit" disabled={isSubmitting} className="rounded-full bg-[#ff7a18] px-5 py-2 text-[11px] font-bold uppercase tracking-[0.14em] text-black transition hover:bg-[#ff8d3a] disabled:cursor-not-allowed disabled:bg-neutral-600 disabled:text-neutral-300">{isSubmitting ? 'Sending...' : 'Send'}</button>
           </div>
         </div>
       </form>
-    </div>
+    </BaseModal>
   )
 }
 

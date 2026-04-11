@@ -8,6 +8,8 @@ import { createCatalogService } from "./modules/catalog/catalog.service.js";
 import { createGeminiImageClient } from "./modules/generation/gemini.client.js";
 import { createGeneratedImageRepository } from "./modules/generation/generation.repository.js";
 import { createGenerationService } from "./modules/generation/generation.service.js";
+import { createLeadsRepository } from "./modules/leads/leads.repository.js";
+import { createLeadsService } from "./modules/leads/leads.service.js";
 import { createShopsRepository } from "./modules/shops/shops.repository.js";
 import { createShopsService } from "./modules/shops/shops.service.js";
 
@@ -23,12 +25,19 @@ async function main(): Promise<void> {
     firestore,
     collectionName: env.shopsCollectionName,
   });
+  const leadsRepository = createLeadsRepository({
+    firestore,
+    collectionName: env.leadsCollectionName,
+  });
   const catalogService = createCatalogService({
     catalogRepository,
     generatedImageRepository,
   });
   const shopsService = createShopsService({
     repository: shopsRepository,
+  });
+  const leadsService = createLeadsService({
+    repository: leadsRepository,
   });
   const generationService = createGenerationService({
     apiKey: env.apiKey,
@@ -45,6 +54,7 @@ async function main(): Promise<void> {
     catalogService,
     generatedImageRepository,
     generationService,
+    leadsService,
     shopsService,
   });
 

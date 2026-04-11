@@ -134,12 +134,14 @@ export function useCatalogLibrary() {
 
   function closeUploadModal(): void {
     setUploadState((current) => {
-      if (current.cars.isUploading || current.wraps.isUploading) {
+      if (!current.modalKind || current[current.modalKind].isUploading) {
         return current
       }
 
       return {
-        ...current,
+        ...updateUploadForm(current, current.modalKind, () =>
+          createUploadFormState(),
+        ),
         modalKind: null,
       }
     })

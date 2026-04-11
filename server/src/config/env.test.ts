@@ -16,6 +16,7 @@ test("createEnv applies defaults and resolves client dist from server root", () 
   assert.equal(env.apiKey, "");
   assert.equal(env.firebaseStorageBucket, "car-wrap-test-bucket");
   assert.equal(env.shopsCollectionName, "shops");
+  assert.equal(env.leadsCollectionName, "leads");
   assert.equal(env.clientDistDir, path.resolve("/repo/server", "../client/dist"));
 });
 

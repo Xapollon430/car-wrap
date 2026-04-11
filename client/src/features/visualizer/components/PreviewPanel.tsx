@@ -3,6 +3,7 @@ import NoticeText from './NoticeText'
 import SaveLeadModal from './SaveLeadModal'
 
 type PreviewPanelProps = {
+  slug: string
   selectedCarLabel: string | null
   selectedWrapLabel: string | null
   catalogErrorMessage: string | null
@@ -16,6 +17,7 @@ type PreviewPanelProps = {
 }
 
 function PreviewPanel({
+  slug,
   selectedCarLabel,
   selectedWrapLabel,
   catalogErrorMessage,
@@ -81,22 +83,31 @@ function PreviewPanel({
         </div>
       ) : generatedImageUrl ? (
         <figure className="mt-5">
-          <button
-            type="button"
-            className="w-full overflow-hidden rounded-xl border border-white/15 bg-black/30"
-            onClick={onOpenPreview}
-            aria-label="Open fullscreen preview"
-            title="Open fullscreen preview"
-          >
+          <div className="relative overflow-hidden rounded-xl border border-white/15 bg-black/30">
+            <button
+              type="button"
+              onClick={onOpenPreview}
+              aria-label="Open fullscreen preview"
+              title="Open fullscreen preview"
+              className="absolute right-3 top-3 z-10 grid h-9 w-9 place-items-center rounded-full border border-white/35 bg-black/70 text-white shadow-[0_6px_18px_rgba(0,0,0,0.45)] transition hover:scale-105 hover:border-white"
+            >
+              <svg viewBox="0 0 24 24" className="h-4 w-4" aria-hidden="true">
+                <path
+                  d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </button>
             <img
               src={generatedImageUrl}
               alt="Generated result"
               className="aspect-[16/10] w-full object-cover transition duration-300 hover:scale-[1.02]"
             />
-          </button>
-          <figcaption className="mt-2 text-xs text-neutral-400">
-            Click image for fullscreen.
-          </figcaption>
+          </div>
           <button
             type="button"
             onClick={() => {
@@ -112,6 +123,7 @@ function PreviewPanel({
 
       <SaveLeadModal
         isOpen={isSaveModalOpen}
+        slug={slug}
         generatedImageUrl={generatedImageUrl}
         onClose={() => setIsSaveModalOpen(false)}
         onSuccess={() => {

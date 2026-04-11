@@ -8,6 +8,7 @@ export type AppEnv = {
   apiKey: string;
   firebaseStorageBucket: string;
   shopsCollectionName: string;
+  leadsCollectionName: string;
   clientDistDir: string;
 };
 
@@ -24,6 +25,7 @@ export function createEnv(rawEnv: NodeJS.ProcessEnv, serverRoot: string): AppEnv
   const apiKey = (rawEnv.GEMINI_API_KEY ?? "").trim();
   const firebaseStorageBucket = (rawEnv.FIREBASE_STORAGE_BUCKET ?? "").trim();
   const shopsCollectionName = (rawEnv.SHOPS_COLLECTION ?? "shops").trim();
+  const leadsCollectionName = (rawEnv.LEADS_COLLECTION ?? "leads").trim();
   if (!firebaseStorageBucket) {
     throw new Error("FIREBASE_STORAGE_BUCKET is required");
   }
@@ -34,6 +36,7 @@ export function createEnv(rawEnv: NodeJS.ProcessEnv, serverRoot: string): AppEnv
     apiKey,
     firebaseStorageBucket,
     shopsCollectionName,
+    leadsCollectionName,
     clientDistDir: resolveFromServer(
       serverRoot,
       rawEnv.CLIENT_DIST_DIR ?? "../client/dist",
