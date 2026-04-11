@@ -16,26 +16,19 @@ function VisualizerPage() {
 
       <header className="sticky top-0 z-30 border-b border-white/10 bg-black/55 backdrop-blur-md">
         <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-5 py-3 md:px-8">
-          <div className="flex items-center">
-            <a
-              href="https://luxgaragedmv.com/"
-              target="_blank"
-              rel="noreferrer"
-              aria-label="Lux Garage Wrap"
-              className="transition hover:opacity-90"
-            >
-              <img
-                src="/lux-garage-logo-rev-1455.png"
-                alt="Lux Garage Wrap"
-                className="block h-8 w-auto md:h-10"
-              />
-            </a>
-          </div>
+          <Link to="/" className="transition hover:opacity-90">
+            <p className="display-font text-2xl leading-none text-white md:text-3xl">
+              WrapPilot
+            </p>
+            <p className="mt-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-neutral-400">
+              AI wrap visualizer
+            </p>
+          </Link>
           <Link
             to="/"
             className="rounded-full border border-white/20 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-neutral-200 transition hover:border-white hover:text-white"
           >
-            Back To Landing
+            Back To Home
           </Link>
         </div>
       </header>
@@ -47,6 +40,9 @@ function VisualizerPage() {
           transition={{ duration: 0.45 }}
           className="mb-4"
         >
+          <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-neutral-400">
+            WrapPilot
+          </p>
           <h1 className="display-font text-3xl leading-[0.94] text-white md:text-5xl">
             Build Your Wrap Preview
           </h1>
