@@ -1,12 +1,18 @@
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { sectionReveal } from '../motion'
+import type { Shop } from '../../tenant/types'
 
 type BookingSectionProps = {
   slug: string
+  shop: Shop
 }
 
-function BookingSection({ slug }: BookingSectionProps) {
+function BookingSection({ slug, shop }: BookingSectionProps) {
+  const accentStyle = shop.accentColor
+    ? { backgroundColor: shop.accentColor }
+    : undefined
+
   return (
     <motion.section
       className="mx-auto w-full max-w-6xl px-5 pb-24 md:px-8"
@@ -18,7 +24,7 @@ function BookingSection({ slug }: BookingSectionProps) {
             Launch Now
           </p>
           <h2 className="display-font mt-3 text-5xl text-white md:text-6xl">
-            Start With WrapPilot
+            Start With {shop.shopName}
           </h2>
           <p className="mt-3 max-w-2xl text-sm text-neutral-300">
             Open the visualizer, build a preview, and capture the lead while the
@@ -27,7 +33,8 @@ function BookingSection({ slug }: BookingSectionProps) {
         </div>
         <Link
           to={`/${slug}/visualizer`}
-          className="rounded-full bg-[#ff7a18] px-8 py-3 text-center text-xs font-bold uppercase tracking-[0.2em] text-black transition hover:bg-[#ff8d3a]"
+          style={accentStyle}
+          className="rounded-full px-8 py-3 text-center text-xs font-bold uppercase tracking-[0.2em] text-black transition hover:brightness-110"
         >
           Open Visualizer
         </Link>

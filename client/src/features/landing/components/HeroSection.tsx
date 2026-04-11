@@ -1,11 +1,17 @@
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
+import type { Shop } from '../../tenant/types'
 
 type HeroSectionProps = {
   slug: string
+  shop: Shop
 }
 
-function HeroSection({ slug }: HeroSectionProps) {
+function HeroSection({ slug, shop }: HeroSectionProps) {
+  const accentStyle = shop.accentColor
+    ? { backgroundColor: shop.accentColor }
+    : undefined
+
   return (
     <section
       className="hero-mobile-left-focus relative isolate min-h-svh w-full overflow-hidden"
@@ -17,11 +23,19 @@ function HeroSection({ slug }: HeroSectionProps) {
 
       <header className="absolute inset-x-0 top-0 z-20 flex items-center justify-between px-5 py-5 md:px-10">
         <Link to={`/${slug}`} className="transition hover:opacity-90">
-          <p className="display-font text-2xl leading-none text-white md:text-3xl">
-            WrapPilot
-          </p>
+          {shop.logoUrl ? (
+            <img
+              src={shop.logoUrl}
+              alt={shop.shopName}
+              className="block h-8 w-auto md:h-10"
+            />
+          ) : (
+            <p className="display-font text-2xl leading-none text-white md:text-3xl">
+              {shop.shopName}
+            </p>
+          )}
           <p className="mt-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-neutral-400">
-            AI wrap visualizer
+            Powered by WrapPilot
           </p>
         </Link>
         <nav className="flex items-center gap-6 text-xs font-semibold uppercase tracking-[0.24em] text-neutral-200/80 md:text-sm">
@@ -45,7 +59,7 @@ function HeroSection({ slug }: HeroSectionProps) {
       >
         <div className="max-w-3xl text-right animate-hero-entrance">
           <p className="mb-3 text-xs font-semibold uppercase tracking-[0.3em] text-neutral-200/90 md:text-sm">
-            WrapPilot
+            {shop.shopName}
           </p>
           <h1 className="display-font text-6xl leading-[0.9] text-white sm:text-7xl md:text-8xl lg:text-9xl">
             Sell The Wrap Before The Install.
@@ -57,7 +71,8 @@ function HeroSection({ slug }: HeroSectionProps) {
           <div className="mt-8 flex flex-wrap items-center justify-end gap-3">
             <Link
               to={`/${slug}/visualizer`}
-              className="rounded-full bg-[#ff7a18] px-7 py-3 text-xs font-bold uppercase tracking-[0.2em] text-black transition hover:bg-[#ff8d3a]"
+              style={accentStyle}
+              className="rounded-full px-7 py-3 text-xs font-bold uppercase tracking-[0.2em] text-black transition hover:brightness-110"
             >
               Open Visualizer
             </Link>
