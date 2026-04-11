@@ -1,7 +1,11 @@
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 
-function HeroSection() {
+type HeroSectionProps = {
+  slug: string
+}
+
+function HeroSection({ slug }: HeroSectionProps) {
   return (
     <section
       className="hero-mobile-left-focus relative isolate min-h-svh w-full overflow-hidden"
@@ -12,7 +16,7 @@ function HeroSection() {
       <div className="texture-overlay absolute inset-0" />
 
       <header className="absolute inset-x-0 top-0 z-20 flex items-center justify-between px-5 py-5 md:px-10">
-        <Link to="/" className="transition hover:opacity-90">
+        <Link to={`/${slug}`} className="transition hover:opacity-90">
           <p className="display-font text-2xl leading-none text-white md:text-3xl">
             WrapPilot
           </p>
@@ -27,7 +31,7 @@ function HeroSection() {
           <a href="#gallery" className="transition hover:text-white">
             Gallery
           </a>
-          <Link to="/visualizer" className="transition hover:text-white">
+          <Link to={`/${slug}/visualizer`} className="transition hover:text-white">
             Visualizer
           </Link>
         </nav>
@@ -52,7 +56,7 @@ function HeroSection() {
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-end gap-3">
             <Link
-              to="/visualizer"
+              to={`/${slug}/visualizer`}
               className="rounded-full bg-[#ff7a18] px-7 py-3 text-xs font-bold uppercase tracking-[0.2em] text-black transition hover:bg-[#ff8d3a]"
             >
               Open Visualizer

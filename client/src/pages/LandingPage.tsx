@@ -3,6 +3,7 @@ import GallerySection from '../features/landing/components/GallerySection'
 import HeroSection from '../features/landing/components/HeroSection'
 import ServicesSection from '../features/landing/components/ServicesSection'
 import TestimonialsSection from '../features/landing/components/TestimonialsSection'
+import { useTenantSlug } from '../features/tenant/useTenantSlug'
 import {
   gallery,
   services,
@@ -10,13 +11,15 @@ import {
 } from '../features/landing/content'
 
 function LandingPage() {
+  const slug = useTenantSlug()
+
   return (
     <div className="bg-[#060606] text-neutral-100">
-      <HeroSection />
+      <HeroSection slug={slug} />
       <ServicesSection services={services} />
       <GallerySection images={gallery} />
       <TestimonialsSection testimonials={testimonials} />
-      <BookingSection />
+      <BookingSection slug={slug} />
     </div>
   )
 }

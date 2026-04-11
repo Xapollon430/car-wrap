@@ -2,7 +2,11 @@ import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { sectionReveal } from '../motion'
 
-function BookingSection() {
+type BookingSectionProps = {
+  slug: string
+}
+
+function BookingSection({ slug }: BookingSectionProps) {
   return (
     <motion.section
       className="mx-auto w-full max-w-6xl px-5 pb-24 md:px-8"
@@ -22,7 +26,7 @@ function BookingSection() {
           </p>
         </div>
         <Link
-          to="/visualizer"
+          to={`/${slug}/visualizer`}
           className="rounded-full bg-[#ff7a18] px-8 py-3 text-center text-xs font-bold uppercase tracking-[0.2em] text-black transition hover:bg-[#ff8d3a]"
         >
           Open Visualizer

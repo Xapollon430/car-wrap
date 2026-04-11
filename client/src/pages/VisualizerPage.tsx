@@ -2,11 +2,13 @@ import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import ImageModal from '../components/ImageModal'
 import PreviewPanel from '../features/visualizer/components/PreviewPanel'
+import { useTenantSlug } from '../features/tenant/useTenantSlug'
 import SelectorPanel from '../features/visualizer/components/SelectorPanel'
 import UploadCatalogModal from '../features/visualizer/components/UploadCatalogModal'
 import { useVisualizer } from '../features/visualizer/hooks/useVisualizer'
 
 function VisualizerPage() {
+  const slug = useTenantSlug()
   const { carPanel, wrapPanel, previewPanel, uploadModal, imageModal } =
     useVisualizer()
 
@@ -16,7 +18,7 @@ function VisualizerPage() {
 
       <header className="sticky top-0 z-30 border-b border-white/10 bg-black/55 backdrop-blur-md">
         <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-5 py-3 md:px-8">
-          <Link to="/" className="transition hover:opacity-90">
+          <Link to={`/${slug}`} className="transition hover:opacity-90">
             <p className="display-font text-2xl leading-none text-white md:text-3xl">
               WrapPilot
             </p>
@@ -25,7 +27,7 @@ function VisualizerPage() {
             </p>
           </Link>
           <Link
-            to="/"
+            to={`/${slug}`}
             className="rounded-full border border-white/20 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-neutral-200 transition hover:border-white hover:text-white"
           >
             Back To Home
