@@ -9,6 +9,8 @@ import type { CatalogService } from "./modules/catalog/catalog.service.js";
 import { createGenerationRouter } from "./modules/generation/generation.routes.js";
 import type { GeneratedImageRepository } from "./modules/generation/generation.repository.js";
 import type { GenerationService } from "./modules/generation/generation.service.js";
+import { createShopsRouter } from "./modules/shops/shops.routes.js";
+import type { ShopsService } from "./modules/shops/shops.service.js";
 
 export async function createApp(input: {
   env: AppEnv;
@@ -16,6 +18,7 @@ export async function createApp(input: {
   catalogService: CatalogService;
   generatedImageRepository: GeneratedImageRepository;
   generationService: GenerationService;
+  shopsService: ShopsService;
 }) {
   const app = express();
   const clientIndexPath = path.join(input.env.clientDistDir, "index.html");
@@ -38,6 +41,12 @@ export async function createApp(input: {
     createGenerationRouter({
       service: input.generationService,
       repository: input.generatedImageRepository,
+    }),
+  );
+
+  app.use(
+    createShopsRouter({
+      service: input.shopsService,
     }),
   );
 

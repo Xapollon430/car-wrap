@@ -16,6 +16,10 @@ export function notFound(message: string): HttpError {
   return new HttpError(404, message);
 }
 
+export function forbidden(message: string): HttpError {
+  return new HttpError(403, message);
+}
+
 export function messageFromError(error: unknown, fallback: string): string {
   if (error instanceof Error && error.message.trim()) {
     return error.message;

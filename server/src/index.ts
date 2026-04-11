@@ -2,22 +2,33 @@ import { Storage } from "@google-cloud/storage";
 import { createApp } from "./app.js";
 import { loadEnv } from "./config/env.js";
 import { messageFromError } from "./lib/errors.js";
+import { createFirestore } from "./lib/firestore.js";
 import { createCatalogRepository } from "./modules/catalog/catalog.repository.js";
 import { createCatalogService } from "./modules/catalog/catalog.service.js";
 import { createGeminiImageClient } from "./modules/generation/gemini.client.js";
 import { createGeneratedImageRepository } from "./modules/generation/generation.repository.js";
 import { createGenerationService } from "./modules/generation/generation.service.js";
+import { createShopsRepository } from "./modules/shops/shops.repository.js";
+import { createShopsService } from "./modules/shops/shops.service.js";
 
 async function main(): Promise<void> {
   const { env } = loadEnv(import.meta.url);
   const storage = new Storage();
+  const firestore = createFirestore();
   const bucket = storage.bucket(env.firebaseStorageBucket);
 
   const catalogRepository = createCatalogRepository(bucket);
   const generatedImageRepository = createGeneratedImageRepository(bucket);
+  const shopsRepository = createShopsRepository({
+    firestore,
+    collectionName: env.shopsCollectionName,
+  });
   const catalogService = createCatalogService({
     catalogRepository,
     generatedImageRepository,
+  });
+  const shopsService = createShopsService({
+    repository: shopsRepository,
   });
   const generationService = createGenerationService({
     apiKey: env.apiKey,
@@ -34,6 +45,7 @@ async function main(): Promise<void> {
     catalogService,
     generatedImageRepository,
     generationService,
+    shopsService,
   });
 
   app.listen(env.port, () => {

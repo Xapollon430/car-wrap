@@ -7,6 +7,7 @@ export type AppEnv = {
   model: string;
   apiKey: string;
   firebaseStorageBucket: string;
+  shopsCollectionName: string;
   clientDistDir: string;
 };
 
@@ -22,6 +23,7 @@ export function createEnv(rawEnv: NodeJS.ProcessEnv, serverRoot: string): AppEnv
   const model = (rawEnv.GEMINI_MODEL ?? "gemini-2.5-flash-image").trim();
   const apiKey = (rawEnv.GEMINI_API_KEY ?? "").trim();
   const firebaseStorageBucket = (rawEnv.FIREBASE_STORAGE_BUCKET ?? "").trim();
+  const shopsCollectionName = (rawEnv.SHOPS_COLLECTION ?? "shops").trim();
   if (!firebaseStorageBucket) {
     throw new Error("FIREBASE_STORAGE_BUCKET is required");
   }
@@ -31,6 +33,7 @@ export function createEnv(rawEnv: NodeJS.ProcessEnv, serverRoot: string): AppEnv
     model,
     apiKey,
     firebaseStorageBucket,
+    shopsCollectionName,
     clientDistDir: resolveFromServer(
       serverRoot,
       rawEnv.CLIENT_DIST_DIR ?? "../client/dist",
