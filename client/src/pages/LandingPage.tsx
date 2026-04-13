@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import WrapPilotFooter from '../components/WrapPilotFooter'
 import BookingSection from '../features/landing/components/BookingSection'
 import GallerySection from '../features/landing/components/GallerySection'
 import HeroSection from '../features/landing/components/HeroSection'
@@ -47,6 +48,7 @@ function LandingPage() {
       <GallerySection images={gallery} />
       <TestimonialsSection testimonials={testimonials} />
       <BookingSection slug={slug} shop={shopState.shop} />
+      <WrapPilotFooter />
     </div>
   )
 }

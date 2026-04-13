@@ -44,7 +44,7 @@ function BaseModal({
                 event.preventDefault()
               }
             }}
-            className={`relative w-full max-w-lg max-h-[calc(100vh-2rem)] overflow-y-auto focus:outline-none ${contentClassName}`}
+            className={`relative w-full max-h-[calc(100vh-2rem)] overflow-y-auto focus:outline-none ${contentClassName}`}
           >
             {children}
             <Dialog.Close asChild>

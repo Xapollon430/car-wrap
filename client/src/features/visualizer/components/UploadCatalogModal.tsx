@@ -37,7 +37,7 @@ function UploadCatalogModal({
       onClose={onClose}
       closeDisabled={isBusy}
       ariaLabel={`Upload ${label}`}
-      contentClassName="glass-surface rounded-2xl p-5 md:p-6"
+      contentClassName="glass-surface max-w-md rounded-2xl p-5 md:p-6"
     >
       <h3 className="display-font pr-12 text-3xl text-white">Upload {label}</h3>
 

@@ -34,9 +34,6 @@ function HeroSection({ slug, shop }: HeroSectionProps) {
               {shop.shopName}
             </p>
           )}
-          <p className="mt-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-neutral-400">
-            Powered by WrapPilot
-          </p>
         </Link>
         <nav className="flex items-center gap-6 text-xs font-semibold uppercase tracking-[0.24em] text-neutral-200/80 md:text-sm">
           <a href="#services" className="transition hover:text-white">

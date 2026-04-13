@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import BaseModal from '../../../components/BaseModal'
+
 type SaveLeadModalProps = {
   isOpen: boolean
   slug: string
@@ -7,6 +8,13 @@ type SaveLeadModalProps = {
   onClose: () => void
   onSuccess: () => void
 }
+
+type SaveLeadResponse = {
+  ok: boolean
+  customerDeliveryStatus: 'pending' | 'sent' | 'failed'
+  shopDeliveryStatus: 'pending' | 'sent' | 'failed'
+}
+
 function SaveLeadModal({
   isOpen,
   slug,
@@ -86,6 +94,11 @@ function SaveLeadModal({
         throw new Error('Could not submit request')
       }
 
+      const payload = (await response.json()) as SaveLeadResponse
+      if (!payload.ok) {
+        throw new Error('Could not send both emails')
+      }
+
       resetFormState()
       onSuccess()
     } catch (error) {
@@ -108,7 +121,7 @@ function SaveLeadModal({
       }}
       closeDisabled={isSubmitting}
       ariaLabel="Save this image"
-      contentClassName="glass-surface rounded-2xl p-5 md:p-6"
+      contentClassName="glass-surface max-w-md rounded-2xl p-5 md:p-6"
     >
       <form
         className="mt-1"

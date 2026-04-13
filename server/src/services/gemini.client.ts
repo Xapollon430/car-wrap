@@ -13,40 +13,6 @@ type GeminiClientLike = {
   };
 };
 
-export type GeminiImageInput = {
-  prompt: string;
-  carBytes: Buffer;
-  carMimeType: string;
-  wrapBytes: Buffer;
-  wrapMimeType: string;
-};
-
-export type GeminiImageClient = ReturnType<typeof createGeminiImageClient>;
-
-export function createGeminiImageClient(config: {
-  apiKey: string;
-  model: string;
-}) {
-  async function generateImage(
-    input: GeminiImageInput,
-  ): Promise<{ bytes: Buffer; mimeType: string }> {
-    const client = new GoogleGenAI({ apiKey: config.apiKey });
-
-    return generateGeminiImageWithClient(client, {
-      model: config.model,
-      prompt: input.prompt,
-      carBase64: input.carBytes.toString("base64"),
-      carMimeType: input.carMimeType,
-      wrapBase64: input.wrapBytes.toString("base64"),
-      wrapMimeType: input.wrapMimeType,
-    });
-  }
-
-  return {
-    generateImage,
-  };
-}
-
 type GenerateImageWithClientInput = {
   model: string;
   prompt: string;
@@ -55,6 +21,27 @@ type GenerateImageWithClientInput = {
   wrapBase64: string;
   wrapMimeType: string;
 };
+
+export async function generateGeminiImage(input: {
+  apiKey: string;
+  model: string;
+  prompt: string;
+  carBytes: Buffer;
+  carMimeType: string;
+  wrapBytes: Buffer;
+  wrapMimeType: string;
+}): Promise<{ bytes: Buffer; mimeType: string }> {
+  const client = new GoogleGenAI({ apiKey: input.apiKey });
+
+  return generateGeminiImageWithClient(client, {
+    model: input.model,
+    prompt: input.prompt,
+    carBase64: input.carBytes.toString("base64"),
+    carMimeType: input.carMimeType,
+    wrapBase64: input.wrapBytes.toString("base64"),
+    wrapMimeType: input.wrapMimeType,
+  });
+}
 
 export async function generateGeminiImageWithClient(
   client: GeminiClientLike,

@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import ImageModal from '../components/ImageModal'
+import WrapPilotFooter from '../components/WrapPilotFooter'
 import { DEFAULT_TENANT_SLUG } from '../features/tenant/types'
 import { useShop } from '../features/tenant/useShop'
 import PreviewPanel from '../features/visualizer/components/PreviewPanel'
@@ -43,7 +44,7 @@ function VisualizerPage() {
     : undefined
 
   return (
-    <div className="min-h-screen bg-[#070707] text-neutral-100">
+    <div className="flex min-h-screen flex-col bg-[#070707] text-neutral-100">
       <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_20%_0%,rgba(255,122,24,0.16),transparent_32%),radial-gradient(circle_at_90%_22%,rgba(255,255,255,0.08),transparent_20%)]" />
 
       <header className="sticky top-0 z-30 border-b border-white/10 bg-black/55 backdrop-blur-md">
@@ -60,9 +61,6 @@ function VisualizerPage() {
                 {shopState.shop.shopName}
               </p>
             )}
-            <p className="mt-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-neutral-400">
-              Powered by WrapPilot
-            </p>
           </Link>
           <Link
             to={`/${slug}`}
@@ -73,7 +71,7 @@ function VisualizerPage() {
         </div>
       </header>
 
-      <main className="relative z-10 mx-auto w-full max-w-7xl px-5 py-5 md:px-8 md:py-6">
+      <main className="relative z-10 mx-auto w-full max-w-7xl flex-1 px-5 py-5 md:px-8 md:py-6">
         <motion.section
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
@@ -97,6 +95,8 @@ function VisualizerPage() {
           <PreviewPanel {...previewPanel} slug={slug} />
         </div>
       </main>
+
+      <WrapPilotFooter />
 
       <UploadCatalogModal {...uploadModal} />
       <ImageModal {...imageModal} />

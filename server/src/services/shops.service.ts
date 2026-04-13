@@ -1,15 +1,16 @@
-import type { Firestore } from "@google-cloud/firestore";
-import type { ShopRecord, ShopStatus } from "./shops.types.js";
+import { forbidden, notFound } from "../lib/errors.js";
+import type { ShopRecord, ShopStatus } from "../models/shop.model.js";
+import { getFirestore } from "../db/firebase.js";
 
-export type ShopsRepository = ReturnType<typeof createShopsRepository>;
+export type ShopLookup = {
+  getBySlug: (slug: string) => Promise<ShopRecord | null>;
+};
 
-export function createShopsRepository(input: {
-  firestore: Firestore;
-  collectionName: string;
-}) {
-  async function getBySlug(slug: string): Promise<ShopRecord | null> {
-    const snapshot = await input.firestore
-      .collection(input.collectionName)
+const firestoreLookup: ShopLookup = {
+  async getBySlug(slug: string): Promise<ShopRecord | null> {
+    const collectionName = (process.env.SHOPS_COLLECTION ?? "shops").trim() || "shops";
+    const snapshot = await getFirestore()
+      .collection(collectionName)
       .where("slug", "==", slug)
       .limit(1)
       .get();
@@ -20,11 +21,22 @@ export function createShopsRepository(input: {
     }
 
     return parseShopRecord(doc.data());
+  },
+};
+
+export async function getPublicShop(
+  slug: string,
+  lookup: ShopLookup = firestoreLookup,
+): Promise<ShopRecord> {
+  const shop = await lookup.getBySlug(slug);
+  if (!shop) {
+    throw notFound("shop not found");
+  }
+  if (shop.status !== "active") {
+    throw forbidden("shop is inactive");
   }
 
-  return {
-    getBySlug,
-  };
+  return shop;
 }
 
 function parseShopRecord(value: unknown): ShopRecord | null {
@@ -62,5 +74,6 @@ function readStatus(value: unknown): ShopStatus | null {
   if (value === "active" || value === "suspended") {
     return value;
   }
+
   return null;
 }
